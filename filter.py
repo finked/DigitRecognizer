@@ -18,29 +18,29 @@ def absDist(list1, list2):
     return dist
 
 # Read data from given csv file
-data = readCsvData("train_short.csv")
+data = readCsvData("train.csv")
 
 # Create number mask for numbers 0 - 9
 mask = createMask(data)
 
 # Read test data
-testdata = readCsvData("test_short.csv")
+testdata = readCsvData("test.csv")
 
 # Compare test data with mask
 # Loop for each line representing one number
 dist = np.zeros(10)
-sol = np.zeros(len(testdata))
+sol = np.zeros((len(testdata),2))
 for i in range(len(testdata)):
     
     # Compare line with each mask
     for j in range(10):
         dist[j] = absDist(mask[j],testdata[i])
         
-    # Find minimum value of distance
-    min = np.minimum(dist)
+    # Find index where dist is minimal
+    sol[i][0] = i+1
+    sol[i][1] = np.argmin(dist)
     
-    # TODO: Get index of minimum
     
-    
-    # Write number in solution file
-    numpy.savetxt("solution.csv", sol, delimeter=",")
+# Write number in solution file
+np.savetxt("solution.csv", sol, delimiter=",", fmt = '%d',
+           header = '"ImageId", "Label"')
