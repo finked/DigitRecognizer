@@ -47,7 +47,7 @@ class LinearSolver(Solver):
         self.testData = testData
 
         # Create number mask for numbers 0 - 9
-        if trainingData:
+        if trainingData is not None:
             self.createMask(trainingData)
 
 
@@ -58,7 +58,7 @@ class LinearSolver(Solver):
         returns a numpy array with the found digits
         """
 
-        if not testData:
+        if testData is None:
             testData = self.testData
 
         # Compare test data with mask
