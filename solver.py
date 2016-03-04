@@ -32,7 +32,8 @@ class LinearSolver(Solver):
         self.testData = testData
 
         # Create number mask for numbers 0 - 9
-        self.mask = self.createMask(trainingData)
+        if trainingData:
+            self.createMask(trainingData)
 
 
     def solve(self, testData = None):
@@ -70,9 +71,10 @@ class LinearSolver(Solver):
 
         for i in range(10):
             lines = [line[1:] for line in data if line[0] == i]
-            #print("%s - %s" % (i, len(lines)))
             if lines:
                 mask[i] = np.average(lines, axis=0)
+
+        self.mask = mask
         return mask
 
 
