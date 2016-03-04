@@ -2,11 +2,21 @@
 import numpy as np
 
 class Solver:
-    """ base class to recognize digits """
+    """
+    base class to recognize digits
+
+    a solver takes one set of known images to train (trainingData)
+    and can then work on another set of images (testData) to get a solution
+
+    the __init__() function should take the data as optional parameters
+    and if present start the training and the solving-process
+    """
 
     def __init__(self, trainingData, testData):
         """
         Initialization
+
+        if trainingData is present, start the training
         """
         raise NotImplementedError
 
@@ -21,7 +31,12 @@ class Solver:
 
 
 class LinearSolver(Solver):
-    """ a linear solver """
+    """
+    a linear solver
+
+    this solver creates a mask from the training set and compares each image of
+    the testset with the mask
+    """
 
     def __init__(self, trainingData = None, testData = None):
         """
