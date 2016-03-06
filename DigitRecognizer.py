@@ -33,7 +33,8 @@ class DigitRecognizer:
         testdata = readCsvData(self.testFile)
 
         # call the solver to recognize the digit
-        self.sol = solver(data, testdata).solve()
+        self.solver = solver(data, testdata)
+        self.sol = self.solver.solve()
 
         self.saveSolution()
 
