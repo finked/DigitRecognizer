@@ -26,6 +26,14 @@ class DigitRecognizer:
             self.trainFile = self.trainShort
             self.testFile = self.testShort
 
+        self.solver = solver
+
+
+    def run(self):
+        """
+        read the data, run the solver and write the output file
+        """
+
         # Read data from given csv file
         data = readCsvData(self.trainFile)
 
@@ -33,7 +41,7 @@ class DigitRecognizer:
         testdata = readCsvData(self.testFile)
 
         # call the solver to recognize the digit
-        self.solver = solver(data, testdata)
+        self.solver = self.solver(data, testdata)
         self.sol = self.solver.solve()
 
         self.saveSolution()
@@ -50,9 +58,11 @@ def Main():
     # (100 rows instead of 28000)
     # TODO: use a library to parse arguments
     if (('-t' in sys.argv[1:] ) | ('--test' in sys.argv[1:])):
-        DigitRecognizer(test=True)
+        DR = DigitRecognizer(test=True)
     else:
-        DigitRecognizer()
+        DR = DigitRecognizer()
+
+    DR.run()
 
 if __name__ == "__main__":
     Main()

@@ -1,5 +1,6 @@
 #main imports
 import numpy as np
+from joblib import Parallel, delayed
 
 class Solver:
     """
@@ -30,7 +31,28 @@ class Solver:
         raise NotImplementedError
 
 
-class LinearSolver(Solver):
+class MaskSolver(Solver):
+    """
+    meta class of a solver with a mask to check the test set against
+
+    different masks can be taken from .Mask
+    """
+
+    def createMask(self, data):
+        """ create a mask from the given data """
+
+        mask = np.zeros((10, data.shape[1]-1))
+
+        for i in range(10):
+            lines = [line[1:] for line in data if line[0] == i]
+            if lines:
+                mask[i] = np.average(lines, axis=0)
+
+        self.mask = mask
+        return mask
+
+
+class LinearSolver(MaskSolver):
     """
     a linear solver
 
@@ -78,19 +100,35 @@ class LinearSolver(Solver):
         self.sol = sol
         return sol
 
+    
+    def solveParallel(self, testData = None):
+        """
+        run the solving algorythm parallel
+        """
 
-    def createMask(self, data):
-        """ create a mask from the given data """
+        if testData is not None:
+            self.testData = testData
 
-        mask = np.zeros((10, data.shape[1]-1))
+        #start parallel loop
+        Parallel(backend="threading")(
+                delayed(self.solveStep)(i) for i in range(len(self.testData)))
+        return self.sol
+        
 
-        for i in range(10):
-            lines = [line[1:] for line in data if line[0] == i]
-            if lines:
-                mask[i] = np.average(lines, axis=0)
+    def solveStep(self, i):
+        """
+        solve one image
+        """
 
-        self.mask = mask
-        return mask
+        dist = np.zeros(10)
+
+        # Compare line with each mask
+        for j in range(10):
+            dist[j] = self.absDist(self.mask[j],self.testData[i])
+
+        # Find index where dist is minimal
+        self.sol[i][0] = i+1
+        self.sol[i][1] = np.argmin(dist)
 
 
     def absDist(self, list1, list2):
