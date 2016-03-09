@@ -100,6 +100,47 @@ class LinearSolver(MaskSolver):
         self.sol = sol
         return sol
 
+
+    def solveVectorized(self, testData = None):
+        """
+        solve with first step of vectorization
+        """
+
+        if testData is None:
+            testData = self.testData
+
+        # Compare test data with mask
+        # Loop for each line representing one number
+        dist = np.zeros(10)
+        sol = np.zeros((len(testData),2))
+        for i in range(len(testData)):
+
+            sol[i][0] = i+1
+            sol[i][1] = np.argmin(np.sum(np.abs(self.mask - testData[i]),
+                                         axis = 1))
+
+        self.sol = sol
+        return sol
+
+
+    def solveFullyVectorized(self, testData = None):
+        """
+        solve with a fully vectorized function created by numpy
+        """
+
+        if testData is None:
+            testData = self.testData
+
+        def absDist(list1, list2):
+            for vec in list2:
+                dist[i] = np.argmin(np.sum(np.abs(list1 - vec), axis = 1))
+            sol = np.argmin(np.sum(np.abs(list1 - list2)))
+            return sol
+
+        vAbsDist = np.vectorize(absDist)
+
+        sol = vAbsDist(self.mask, self.testData)
+
     
     def solveParallel(self, testData = None):
         """
