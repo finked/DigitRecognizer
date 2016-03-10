@@ -103,7 +103,10 @@ class LinearSolver(MaskSolver):
 
     def solveVectorized(self, testData = None):
         """
-        solve with first step of vectorization
+        run the solving algorythm
+
+        the computation of the absolute Distance is vectorized.
+        returns a numpy array with the found digits
         """
 
         if testData is None:
@@ -121,25 +124,6 @@ class LinearSolver(MaskSolver):
 
         self.sol = sol
         return sol
-
-
-    def solveFullyVectorized(self, testData = None):
-        """
-        solve with a fully vectorized function created by numpy
-        """
-
-        if testData is None:
-            testData = self.testData
-
-        def absDist(list1, list2):
-            for vec in list2:
-                dist[i] = np.argmin(np.sum(np.abs(list1 - vec), axis = 1))
-            sol = np.argmin(np.sum(np.abs(list1 - list2)))
-            return sol
-
-        vAbsDist = np.vectorize(absDist)
-
-        sol = vAbsDist(self.mask, self.testData)
 
     
     def solveParallel(self, testData = None):
