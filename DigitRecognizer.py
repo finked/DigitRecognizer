@@ -29,9 +29,10 @@ class DigitRecognizer:
         self.solver = solver
 
 
-    def run(self):
+    def loadData(self):
         """
-        read the data, run the solver and write the output file
+        read the trainingset and testset from the csv files
+        and prepare the solver
         """
 
         # Read data from given csv file
@@ -40,8 +41,18 @@ class DigitRecognizer:
         # Read test data
         testdata = readCsvData(self.testFile)
 
-        # call the solver to recognize the digit
+        # prepare the solver with the data
         self.solver = self.solver(data, testdata)
+
+
+    def run(self):
+        """
+        read the data, run the solver and write the output file
+        """
+        
+        self.loadData()
+
+        # call the solver to recognize the digit
         self.sol = self.solver.solve()
 
         self.saveSolution()
