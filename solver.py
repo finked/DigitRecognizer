@@ -2,6 +2,8 @@
 import numpy as np
 from joblib import Parallel, delayed
 
+from time import time
+
 class Solver:
     """
     base class to recognize digits
@@ -134,8 +136,11 @@ class LinearSolver(MaskSolver):
         if testData is not None:
             self.testData = testData
 
+        self.sol = np.zeros((len(self.testData),2))
         #start parallel loop
-        Parallel(backend="threading")(
+        #Parallel(backend="threading")(
+                #delayed(self.solveStep)(i) for i in range(len(self.testData)))
+        Parallel(n_jobs=4)(
                 delayed(self.solveStep)(i) for i in range(len(self.testData)))
         return self.sol
         
@@ -164,3 +169,21 @@ class LinearSolver(MaskSolver):
 
         dist = sum(abs(list1 - list2))
         return dist
+
+    
+    def timeit(self, funcName):
+        """
+        this function returns the time it takes to run another function
+
+        I do this internally instead of the python package timeit because 
+        like this we can preload the data and just run the functions repeatedly
+        on this allready loaded data
+        """
+
+        #get local function to call
+        func = getattr(self, funcName)
+
+        before = time()
+        func()
+        after = time()
+        return after - before
