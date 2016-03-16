@@ -1,6 +1,7 @@
 #main imports
 import sys
 import numpy as np
+from time import time
 
 #local imports
 from readData import readCsvData
@@ -62,6 +63,24 @@ class DigitRecognizer:
         # Write number in solution file
         np.savetxt(self.outFile, self.sol, delimiter=",", fmt = '%d, "%d"',
                    header = '"ImageId", "Label"', comments = '')
+
+
+    def timeit(self, funcName):
+        """
+        this function returns the time it takes to run another function
+
+        I do this internally instead of the python package timeit because 
+        like this we can preload the data and just run the functions repeatedly
+        on this allready loaded data
+        """
+
+        #get local function to call
+        func = getattr(self, funcName)
+
+        before = time()
+        func()
+        after = time()
+        return after - before
 
 
 def Main():

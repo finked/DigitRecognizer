@@ -32,6 +32,24 @@ class Solver:
         """
         raise NotImplementedError
 
+    
+    def timeit(self, funcName):
+        """
+        this function returns the time it takes to run another function
+
+        I do this internally instead of the python package timeit because 
+        like this we can preload the data and just run the functions repeatedly
+        on this allready loaded data
+        """
+
+        #get local function to call
+        func = getattr(self, funcName)
+
+        before = time()
+        func()
+        after = time()
+        return after - before
+
 
 class MaskSolver(Solver):
     """
@@ -169,21 +187,3 @@ class LinearSolver(MaskSolver):
 
         dist = sum(abs(list1 - list2))
         return dist
-
-    
-    def timeit(self, funcName):
-        """
-        this function returns the time it takes to run another function
-
-        I do this internally instead of the python package timeit because 
-        like this we can preload the data and just run the functions repeatedly
-        on this allready loaded data
-        """
-
-        #get local function to call
-        func = getattr(self, funcName)
-
-        before = time()
-        func()
-        after = time()
-        return after - before
