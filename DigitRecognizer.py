@@ -18,8 +18,10 @@ class DigitRecognizer:
     testShort = "test_short.csv"
     outFile = "solution.csv"
 
+    solvers = {"LinearSolver": solver.LinearSolver}
+
     # TODO: move compare and save logic into their own functions
-    def __init__(self, test=False, solver = solver.LinearSolver):
+    def __init__(self, test=False, solver = "LinearSolver"):
         """ initialize and run the recognition """
 
         # use shorter versions for a quicker test
@@ -27,7 +29,11 @@ class DigitRecognizer:
             self.trainFile = self.trainShort
             self.testFile = self.testShort
 
-        self.solver = solver
+        # try to load the solver from the dictionary of solvers
+        try:
+            self.solver = self.solvers[solver]
+        except:
+            raise Exception("couldn't load the solver")
 
 
     def loadData(self):
