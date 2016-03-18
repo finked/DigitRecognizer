@@ -18,9 +18,9 @@ class DigitRecognizer:
     testShort = "test_short.csv"
     outFile = "solution.csv"
 
+    # solver classes
     solvers = {"LinearSolver": solver.LinearSolver}
 
-    # TODO: move compare and save logic into their own functions
     def __init__(self, test=False, solver = "LinearSolver"):
         """ initialize and run the recognition """
 

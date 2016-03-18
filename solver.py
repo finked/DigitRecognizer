@@ -53,9 +53,7 @@ class Solver:
 
 class MaskSolver(Solver):
     """
-    meta class of a solver with a mask to check the test set against
-
-    different masks can be taken from .Mask
+    base class of a solver with a mask to check the test set against
     """
 
     def createMask(self, data):
