@@ -15,7 +15,7 @@ class Solver:
     and if present start the training and the solving-process
     """
 
-    def __init__(self, trainingData, testData):
+    def __init__(self, trainingData = None, testData = None, *args, **kwargs):
         """
         Initialization
 
@@ -78,7 +78,7 @@ class LinearSolver(MaskSolver):
     the testset with the mask
     """
 
-    def __init__(self, trainingData = None, testData = None):
+    def __init__(self, trainingData = None, testData = None, *args, **kwargs):
         """
         Initialization: create the mask and set public variables
         """

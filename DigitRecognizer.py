@@ -21,7 +21,7 @@ class DigitRecognizer:
     # solver classes
     solvers = {"LinearSolver": solver.LinearSolver}
 
-    def __init__(self, test=False, solver = "LinearSolver"):
+    def __init__(self, test=False, solver = "LinearSolver", *args, **kwargs):
         """ initialize and run the recognition """
 
         # use shorter versions for a quicker test
@@ -34,6 +34,10 @@ class DigitRecognizer:
             self.solver = self.solvers[solver]
         except:
             raise Exception("couldn't load the solver")
+
+        # these args are used by the solver when initialized in loadData
+        self.solverArgs = args
+        self.solverKwargs = kwargs
 
 
     def loadData(self):
@@ -49,7 +53,10 @@ class DigitRecognizer:
         testdata = readCsvData(self.testFile)
 
         # prepare the solver with the data
-        self.solver = self.solver(data, testdata)
+        self.solver = self.solver(data,
+                                  testdata,
+                                  self.solverArgs,
+                                  self.solverKwargs)
 
 
     def run(self):
