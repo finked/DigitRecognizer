@@ -31,13 +31,9 @@ class DigitRecognizer:
 
         # try to load the solver from the dictionary of solvers
         try:
-            self.solver = self.solvers[solver]
+            self.solver = self.solvers[solver](None, None, args, kwargs)
         except:
             raise Exception("couldn't load the solver")
-
-        # these args are used by the solver when initialized in loadData
-        self.solverArgs = args
-        self.solverKwargs = kwargs
 
 
     def loadData(self):
@@ -53,10 +49,7 @@ class DigitRecognizer:
         testdata = readCsvData(self.testFile)
 
         # prepare the solver with the data
-        self.solver = self.solver(data,
-                                  testdata,
-                                  self.solverArgs,
-                                  self.solverKwargs)
+        self.solver.loadData(data, testdata)
 
 
     def run(self):

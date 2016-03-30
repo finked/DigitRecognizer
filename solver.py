@@ -32,6 +32,13 @@ class Solver:
         """
         raise NotImplementedError
 
+
+    def loadData(self, trainingData = None, testData = None):
+        """
+        load the Data and start needed preparations
+        """
+        raise NotImplementedError
+
     
     def timeit(self, funcName):
         """
@@ -55,6 +62,19 @@ class MaskSolver(Solver):
     """
     base class of a solver with a mask to check the test set against
     """
+
+    def loadData(self, trainingData = None, testData = None):
+        """
+        load the Data and start needed preparations
+        """
+
+        self.trainingData = trainingData
+        self.testData = testData
+
+        # Create number mask for numbers 0 - 9
+        if trainingData is not None:
+            self.createMask(trainingData)
+
 
     def createMask(self, data):
         """ create a mask from the given data """
