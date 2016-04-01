@@ -185,3 +185,50 @@ class LinearSolver(MaskSolver):
 
         dist = sum(abs(list1 - list2))
         return dist
+
+class KNearestSolver(Solver):
+    """
+    Solver that compares each test file with each training file and
+    finds the k nearest ones. The solution is given by the maximal occurence
+    of one number in the k nearest numbers.
+    """
+    
+    def __init__(self, trainingData = None, testData = None, *args, **kwargs):
+        """
+        Initialization: set public variables
+        """
+
+        self.trainingData = trainingData
+        self.testData = testData
+
+    def solve(self, testData = None):
+        """
+        run the solving algorythm
+
+        returns a numpy array with the found digits
+        """
+
+        dist = np.zeros(10)
+        sol = np.zeros((len(self.testData),2))
+        
+        k = 10;
+        
+        if testData is None:
+            testData = self.testData
+        
+        for i in range(len(testData)):
+            # create index
+            sol[i][0] = i+1
+            # calculate k closest values
+            near = np.argpartition(np.sum(np.abs(self.trainingData[:,1:] - testData[i]),
+                                         axis = 1), k)
+            #print(near[:k])
+                                      
+            # find class of k closest values and put it into solution
+            sol[i][1] = np.argmax(np.bincount(self.trainingData[near[:k],0]));
+                                      
+            # heapq.nsmallest(5, a)[-1]
+            # np.partition(a, 4)[4]
+
+        self.sol = sol
+        return sol
