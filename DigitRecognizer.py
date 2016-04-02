@@ -21,12 +21,26 @@ class DigitRecognizer:
     # solver classes
     solvers = {"LinearSolver": solver.LinearSolver, "KNearestSolver": solver.KNearestSolver}
 
-    def __init__(self, test=False, solver = "KNearestSolver", *args, **kwargs):
+    def __init__(self,
+                 test=False,
+                 testTest=False,
+                 testTraining=False,
+                 solver = "KNearestSolver",
+                 *args,
+                 **kwargs):
         """ initialize and run the recognition """
 
-        # use shorter versions for a quicker test
+        # use shorter versions of both sets for a quicker test
         if test:
             self.trainFile = self.trainShort
+            self.testFile = self.testShort
+
+        # use shorter version of trainingset
+        if testTraining:
+            self.trainFile = self.trainShort
+
+        # use shorter version of testset
+        if testTest:
             self.testFile = self.testShort
 
         # try to load the solver from the dictionary of solvers
@@ -92,12 +106,13 @@ class DigitRecognizer:
 def Main():
     # when the test-flag is given, the much smaller test-files are used
     # (100 rows instead of 28000)
-    # TODO: use a library to parse arguments
-    if (('-t' in sys.argv[1:] ) | ('--test' in sys.argv[1:])):
-        DR = DigitRecognizer(test=True)
-    else:
-        DR = DigitRecognizer()
+    argTest = (('-t' in sys.argv[1:] ) | ('--test' in sys.argv[1:]))
+    # when the test-Training-flag is given, the smaller trainingset-file is used
+    argTestTraining = (('--test-Training' in sys.argv[1:])|('--test-training' in sys.argv[1:]))
+    # when the test-Test-flag is given, the smaller testset-file is used
+    argTestTest = (('--test-Test' in sys.argv[1:])|('--test-test' in sys.argv[1:]))
 
+    DR = DigitRecognizer(test=argTest, testTraining=argTestTraining, testTest=argTestTest)
     DR.run()
 
 if __name__ == "__main__":
