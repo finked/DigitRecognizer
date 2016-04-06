@@ -83,8 +83,8 @@ class DigitRecognizer:
 
     def saveSolution(self):
         # Write number in solution file
-        np.savetxt(self.outFile, self.sol, delimiter=",", fmt = '%d, "%d"',
-                   header = '"ImageId", "Label"', comments = '')
+        np.savetxt(self.outFile, self.sol, delimiter=",", fmt = '%d,"%d"',
+                   header = '"ImageId","Label"', comments = '')
 
 
     def crossValidate(self, splitAt = 0.7):
