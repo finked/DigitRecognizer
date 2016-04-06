@@ -272,7 +272,7 @@ class NeuralNetwork(Solver):
     
     ...
     """
-    def __init__(self, trainingData = None, testData = None, *args, **kwargs):
+    def __init__(self, trainingData = None, validationData = None, testData = None, *args, **kwargs):
         """
         Initialization: set public variables
         """
@@ -292,7 +292,24 @@ class NeuralNetwork(Solver):
         
         net = network.Network([784, 30, 10])
         
-        net.SGD(self.trainingData, 30, 10, 3.0, test_data = None)
+        # transform data to correct format
+        training_inputs = self.trainingData[1:]
+        training_results = [vectorized_result(y) for y in self.trainingData[0]]
+        self.trainingData = zip(training_inputs, training_results)
         
-        #sol =         
-        #return sol
+        test_inputs = self.validationData[1:]
+        self.testData = zip(test_inputs, self.validationData[0])
+        
+        net.SGD(self.trainingData, 30, 10, 3.0, test_data = self.validationData)
+        
+        sol = np.argmax(net.feedforward(self.testData))
+        return sol
+        
+    def vectorized_result(j):
+        """Return a 10-dimensional unit vector with a 1.0 in the jth
+        position and zeroes elsewhere.  This is used to convert a digit
+        (0...9) into a corresponding desired output from the neural
+        network."""
+        e = np.zeros((10, 1))
+        e[j] = 1.0
+        return e
