@@ -32,7 +32,22 @@ class Solver:
         """
         raise NotImplementedError
 
-    
+
+    def loadData(self, trainingData = None, testData = None):
+        """
+        load the Data and start needed preparations
+
+        if the solver needs to prepare something after loading the data,
+        overwrite this function to do so
+        (for example: create a mask from the training-data)
+        """
+
+        if trainingData is not None:
+            self.trainingData = trainingData
+        if testData is not None:
+            self.testData = testData
+
+
     def timeit(self, funcName):
         """
         this function returns the time it takes to run another function
@@ -55,6 +70,21 @@ class MaskSolver(Solver):
     """
     base class of a solver with a mask to check the test set against
     """
+
+    def loadData(self, trainingData = None, testData = None):
+        """
+        load the Data and start needed preparations
+        """
+
+        if trainingData is not None:
+            self.trainingData = trainingData
+        if testData is not None:
+            self.testData = testData
+
+        # Create number mask for numbers 0 - 9
+        if trainingData is not None:
+            self.createMask(trainingData)
+
 
     def createMask(self, data):
         """ create a mask from the given data """
@@ -143,7 +173,7 @@ class LinearSolver(MaskSolver):
         self.sol = sol
         return sol
 
-    
+
     def solveParallel(self, testData = None):
         """
         run the solving algorythm parallel
@@ -159,7 +189,7 @@ class LinearSolver(MaskSolver):
         Parallel(n_jobs=4)(
                 delayed(self.solveStep)(i) for i in range(len(self.testData)))
         return self.sol
-        
+
 
     def solveStep(self, i):
         """
@@ -186,13 +216,14 @@ class LinearSolver(MaskSolver):
         dist = sum(abs(list1 - list2))
         return dist
 
+
 class KNearestSolver(Solver):
     """
     Solver that compares each test file with each training file and
     finds the k nearest ones. The solution is given by the maximal occurence
     of one number in the k nearest numbers.
     """
-    
+
     def __init__(self, trainingData = None, testData = None, *args, **kwargs):
         """
         Initialization: set public variables
