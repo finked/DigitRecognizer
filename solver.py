@@ -219,6 +219,8 @@ class LinearSolver(MaskSolver):
 
 class KNearestSolver(Solver):
     """
+    A KNearestSolver for digit recognition
+    
     Solver that compares each test file with each training file and
     finds the k nearest ones. The solution is given by the maximal occurence
     of one number in the k nearest numbers.
@@ -263,3 +265,34 @@ class KNearestSolver(Solver):
 
         self.sol = sol
         return sol
+        
+class NeuralNetwork(Solver):
+    """
+    A neural network for digit recognition
+    
+    ...
+    """
+    def __init__(self, trainingData = None, testData = None, *args, **kwargs):
+        """
+        Initialization: set public variables
+        """
+    
+        self.trainingData = trainingData
+        self.testData = testData
+            
+        
+    def solve(self, testData = None):
+        """
+        run the solving algorythm
+
+        returns a numpy array with the found digits
+        """
+        
+        import network
+        
+        net = network.Network([784, 30, 10])
+        
+        net.SGD(self.trainingData, 30, 10, 3.0, test_data = None)
+        
+        #sol =         
+        #return sol

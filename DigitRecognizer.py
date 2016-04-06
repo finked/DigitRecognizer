@@ -19,13 +19,15 @@ class DigitRecognizer:
     outFile = "solution.csv"
 
     # solver classes
-    solvers = {"LinearSolver": solver.LinearSolver, "KNearestSolver": solver.KNearestSolver}
+    solvers = {"LinearSolver": solver.LinearSolver, 
+               "KNearestSolver": solver.KNearestSolver,
+               "NeuralNetwork": solver.NeuralNetwork}
 
     def __init__(self,
                  test=False,
                  testTest=False,
                  testTraining=False,
-                 solver = "KNearestSolver",
+                 solver = "NeuralNetwork",
                  *args,
                  **kwargs):
         """ initialize and run the recognition """
