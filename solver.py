@@ -272,14 +272,35 @@ class NeuralNetwork(Solver):
     
     ...
     """
-    def __init__(self, trainingData = None, validationData = None, testData = None, *args, **kwargs):
+    def __init__(self, trainingData = None, testData = None, *args, **kwargs):
         """
         Initialization: set public variables
         """
     
         self.trainingData = trainingData
         self.testData = testData
-            
+
+
+
+    def loadData(self, trainingData = None, testData = None):
+        """
+        load the Data and start needed preparations
+
+        if the solver needs to prepare something after loading the data,
+        overwrite this function to do so
+        (for example: create a mask from the training-data)
+        """
+
+        if trainingData is not None:
+            self.trainingData = trainingData
+        if testData is not None:
+            self.testData = testData
+
+        if trainingData is not None:
+            splitter = (int)(0.7 * len(trainingData))
+            self.validationData = trainingData[splitter:]
+            self.trainingData = trainingData[:splitter]
+
         
     def solve(self, testData = None):
         """
@@ -293,19 +314,19 @@ class NeuralNetwork(Solver):
         net = network.Network([784, 30, 10])
         
         # transform data to correct format
-        training_inputs = self.trainingData[1:]
-        training_results = [vectorized_result(y) for y in self.trainingData[0]]
+        training_inputs = self.trainingData[:,1:]
+        training_results = [self.vectorized_result(y) for y in self.trainingData[:,0]]
         self.trainingData = zip(training_inputs, training_results)
         
-        test_inputs = self.validationData[1:]
-        self.testData = zip(test_inputs, self.validationData[0])
+        validation_inputs = self.validationData[:,1:]
+        self.validationData = zip(validation_inputs, self.validationData[:,0])
         
         net.SGD(self.trainingData, 30, 10, 3.0, test_data = self.validationData)
         
-        sol = np.argmax(net.feedforward(self.testData))
-        return sol
+        # sol = np.argmax(net.feedforward(self.testData))
+        # return sol
         
-    def vectorized_result(j):
+    def vectorized_result(self, j):
         """Return a 10-dimensional unit vector with a 1.0 in the jth
         position and zeroes elsewhere.  This is used to convert a digit
         (0...9) into a corresponding desired output from the neural
