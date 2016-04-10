@@ -301,31 +301,33 @@ class NeuralNetwork(Solver):
             self.validationData = trainingData[splitter:]
             self.trainingData = trainingData[:splitter]
 
-        
+
     def solve(self, testData = None):
         """
         run the solving algorythm
 
         returns a numpy array with the found digits
         """
-        
+
         import network
-        
+
         net = network.Network([784, 30, 10])
-        
+
         # transform data to correct format
         training_inputs = self.trainingData[:,1:]
         training_results = [self.vectorized_result(y) for y in self.trainingData[:,0]]
-        self.trainingData = zip(training_inputs, training_results)
-        
+        self.trainingData = list(zip(training_inputs, training_results))
+
+        # no transformation needed
         validation_inputs = self.validationData[:,1:]
-        self.validationData = zip(validation_inputs, self.validationData[:,0])
-        
+        validation_results = self.validationData[:,0]
+        self.validationData = list(zip(validation_inputs, validation_results))
+
         net.SGD(self.trainingData, 30, 10, 3.0, test_data = self.validationData)
-        
+
         # sol = np.argmax(net.feedforward(self.testData))
         # return sol
-        
+
     def vectorized_result(self, j):
         """Return a 10-dimensional unit vector with a 1.0 in the jth
         position and zeroes elsewhere.  This is used to convert a digit
