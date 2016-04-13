@@ -325,8 +325,12 @@ class NeuralNetwork(Solver):
 
         net.SGD(self.trainingData, 30, 10, 3.0, test_data = self.validationData)
 
-        # sol = np.argmax(net.feedforward(self.testData))
-        # return sol
+        testData = [np.reshape(x, (784, 1)) for x in self.testData]
+        sol = np.zeros((len(testData),2))
+        for i, testEntry in enumerate(testData):
+            sol[i][0] = i
+            sol[i][1] = np.argmax(net.feedforward(testEntry))
+        return sol
 
     def vectorized_result(self, j):
         """Return a 10-dimensional unit vector with a 1.0 in the jth
