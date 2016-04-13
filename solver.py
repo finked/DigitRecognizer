@@ -328,7 +328,7 @@ class NeuralNetwork(Solver):
         testData = [np.reshape(x, (784, 1)) for x in self.testData]
         sol = np.zeros((len(testData),2))
         for i, testEntry in enumerate(testData):
-            sol[i][0] = i
+            sol[i][0] = i+1
             sol[i][1] = np.argmax(net.feedforward(testEntry))
         return sol
 
