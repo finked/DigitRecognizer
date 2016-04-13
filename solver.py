@@ -314,12 +314,12 @@ class NeuralNetwork(Solver):
         net = network.Network([784, 30, 10])
 
         # transform data to correct format
-        training_inputs = self.trainingData[:,1:]
+        training_inputs = [np.reshape(x, (784, 1)) for x in self.trainingData[:, 1:]]
         training_results = [self.vectorized_result(y) for y in self.trainingData[:,0]]
         self.trainingData = list(zip(training_inputs, training_results))
 
         # no transformation needed
-        validation_inputs = self.validationData[:,1:]
+        validation_inputs = [np.reshape(x, (784,1)) for x in self.validationData[:,1:]]
         validation_results = self.validationData[:,0]
         self.validationData = list(zip(validation_inputs, validation_results))
 
